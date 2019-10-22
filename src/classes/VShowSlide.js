@@ -31,7 +31,7 @@ export default class VShowSlide {
    * @param {Node} el Element directive is bound to
    * @param {Object} binding Binding options
    */
-  bind (el, binding) {
+  bind (el, binding, vnode) {
     this.parseArgs(el, binding)
   }
 
@@ -138,12 +138,12 @@ export default class VShowSlide {
    * @param {Node} el Element directive is bound to
    * @param {Object} binding Binding options
    */
-  toggleSlide (el, binding) {
+  toggleSlide (el, binding, vnode) {
     if (binding.value !== binding.oldValue) {
       if (binding.value) {
         this.slideOpen(el)
       } else {
-        this.slideClosed(el)
+        this.slideClosed(el, vnode)
       }
     }
   }
@@ -187,12 +187,11 @@ export default class VShowSlide {
 
     // Set element height to scroll height
     let scrollHeight = el.scrollHeight
-    el.style.height = `${scrollHeight}px`
+    el.style.height = scrollHeight + 'px'
 
-    // Very short timeout before setting height of element to 0
-    setTimeout(() => {
-      el.style.height = '0px'
-    }, 25)
+    void el.offsetHeight
+
+    el.style.height = '0px'
 
     // Update isAnimating after animation is done
     el.timeout = setTimeout(() => {
